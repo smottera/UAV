@@ -1,0 +1,440 @@
+    API conventions
+    Autoscaling APIs
+    cat APIs
+    Cluster APIs
+    Cross-cluster replication APIs
+    Data stream APIs
+    Document APIs
+    Enrich APIs
+    Graph Explore API
+    Index APIs
+    Index lifecycle management APIs
+    Ingest APIs
+    Info API
+    Licensing APIs
+    Machine learning anomaly detection APIs
+    Machine learning data frame analytics APIs
+    Migration APIs
+    Reload Search Analyzers API
+    Repositories Metering APIs
+    Rollup APIs
+    Search APIs
+    Searchable snapshots APIs
+    Security APIs
+    Snapshot and restore APIs
+    Snapshot lifecycle management APIs
+    Transform APIs
+    Usage API
+    Watcher APIs
+______________________________________________________________________
+1.retrieve index stats
+GET localhost:9200/index_name/_stats
+______________________________________________________________________
+2. sort on multiple fields:
+GET index_name/_search
+{
+  "_source": [
+    "name",
+    "experience",
+    "salary"
+  ],
+  "sort": [
+    {
+      "salary": {
+        "order": "desc"
+      }
+    },
+    {
+      "experience": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+______________________________________________________________________
+
+3. sort by one field:
+GET index_name/_search
+{
+   "_source": ["name","experience","salary"], 
+  "sort": [
+    {
+      "experience": {
+        "order": "desc"
+      }
+    }
+  ],
+
+}
+______________________________________________________________________
+
+4. BOOSTING:
+POST index_name/_search
+{
+    "query": {
+        "multi_match" : {
+            "query" : "versatile Engineer",
+            "fields": ["position^3", "phrase"]
+        }
+    }
+}
+______________________________________________________________________
+5. FUZZY
+GET index_name/_search
+{
+  "query": {
+    "fuzzy": {
+      "country": {
+        "value": "Chnia",
+        "fuzziness": "2"
+      }
+    }
+  }
+}
+
+
+GET index_name/_search
+{
+    "query": {
+        "multi_match" : {
+            "query" : "heursitic reserch",
+            "fields": ["phrase","position"],
+            "fuzziness": 2
+        }
+    },
+    "size": 10
+}
+______________________________________________________________________
+6. REGEX
+GET index_name/_search
+{
+  "query": {
+    "regexp": {
+      "position": "res[a-z]*"
+    }
+  }
+}
+______________________________________________________________________
+7.WILDCARD
+GET index_name/_search
+{
+    "query": {
+        "wildcard": {
+            "country": {
+                "value": "c*a"
+            }
+        }
+    }
+}
+
+______________________________________________________________________
+8.ID
+GET index_name/typename/documentId
+or 
+POST index_name/_search
+
+{
+    "query": {
+        "ids" : {
+            "values" : ["1", "4"]
+        }
+    }
+}
+______________________________________________________________________
+9. PREFIX
+GET index_name/_search
+{
+  "query": {
+    "prefix": {
+      "name": "al"
+    }
+  }
+}
+______________________________________________________________________
+9. RANGE
+GET index_name/_search
+{
+    "query": {
+        "range" : {
+            "date_of_birth" : {
+                "gte" : "01/01/1986"
+            }
+        }
+    }
+}
+______________________________________________________________________
+10. EXISTS
+GET index_name/_search
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        {
+          "exists": {
+            "field": "company"
+          }
+        }
+      ]
+    }
+  }
+}
+______________________________________________________________________
+11. MATCH
+GET index_name/_search
+{
+  "query": {
+    "match_phrase": {
+      "field_name": {
+        "query": "roots coherent",
+        "slop": 1
+      }
+    }
+  }
+}
+______________________________________________________________________
+12. FORMAT DATATYPE OF FIELD
+
+PUT index_name/_mapping
+{
+  "properties": {
+    "date_of_birth": {
+      "type": "date",
+      "format": "dd/MM/yyyy"
+    }
+  }
+}
+______________________________________________________________________
+13. POST _bulk
+example:
+{ "index" : { "_index" : "employees", "_id" : "1" } }
+{"id":1,"name":"Huntlee Dargavel","email":"hdargavel0@japanpost.jp",
+"gender":"male","ip_address":"58.11.89.193",
+"date_of_birth":"11/09/1990",
+"company":"Talane","position":"Research Associate",
+"experience":7,"country":"China",
+"phrase":"Multi-channelled coherent leverage","salary":180025}
+{ "index" : { "_index" : "employees", "_id" : "2" } }
+{"id":2,"name":"Othilia Cathel","email":"ocathel1@senate.gov",
+"gender":"female","ip_address":"3.164.153.228",
+"date_of_birth":"22/07/1987","company":"Edgepulse",
+"position":"Structural Engineer","experience":11,
+"country":"China","phrase":"Grass-roots heuristic help-desk",
+"salary":193530}
+______________________________________________________________________
+14. BOOL query
+POST _search
+{
+  "query": {
+    "bool" : {
+      "must" : [],
+      "filter": [],
+      "must_not" : [],
+      "should" : []
+    }
+  }
+}
+
+//-must: AND
+//-should: OR
+//-filter: Same as the must clause, but the score will be ignored
+//-must_not: The conditions/queries specified must not occur in the
+//-documents.Scoring is ignored and kept as 0 as the results are ignored.
+-----------------------------------------------------------------------
+must example:
+POST employees/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "Message": "Qb_error"
+          }
+        },
+        {
+          "range": {
+            "ts": {
+              "lte": "now"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+should example:
+POST employees/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "position": "manager"
+          }
+        },
+        {
+          "range": {
+            "experience": {
+              "gte": 12
+            }
+          }
+        }
+      ],
+    "should": [
+      {
+        "match": {
+          "phrase": "versatile"
+        }
+      }
+    ]
+    }
+  }
+}
+______________________________________________________________________
+
+15. Multi-BOOL example:
+
+(company = Yamaha OR company = Yozio ) AND 
+(position = manager OR position = associate ) 
+AND (salary>=100000)
+
+This can be achieved using multiple bool queries 
+inside a single must clause, 
+as shown in the below query:
+
+POST employees/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+              {
+                "bool": {
+                    "should": [{
+                        "match": {
+                            "company": "Talane"
+                        }
+                    }, {
+                        "match": {
+                            "company": "Yamaha"
+                        }
+                    }]
+                }
+            }, 
+            {
+                "bool": {
+                    "should": [
+                      {
+                        "match": {
+                            "position": "manager"
+                        }
+                    }, {
+                        "match": {
+                            "position": "Associate"
+                        }
+                    }
+                    ]
+                }
+            }, {
+                "bool": {
+                    "must": [
+                      {
+                        "range": {
+                          "salary": {
+                            "gte": 100000
+                          }
+                        }
+                      }
+                      ]
+                }
+            }]
+        }
+    }
+}
+
+
+GET /_xpack
+______________________________________________________________________
+
+PARENT-CHILD queries
+______________________________________________________________________
+
+---------- INDEX LIFECYCLE MANAGEMENT APIs --------------
+
+1. GET <target>/_ilm/explain
+
+2. POST _ilm/start
+
+3. POST _ilm/stop
+
+4. GET _ilm/status
+
+5. Create lifecycle policy
+PUT _ilm/policy/my_policy
+{
+  "policy": {
+    "phases": {
+      "warm": {
+        "min_age": "10d",
+        "actions": {
+          "forcemerge": {
+            "max_num_segments": 1
+          }
+        }
+      },
+      "delete": {
+        "min_age": "30d",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  }
+}
+
+______________________________________________________________________
+---------- Info API ---------
+GET /_xpack
+GET /_xpack?categories=build,features
+______________________________________________________________________
+
+-------------- CLUSTER APIs -----------------
+
+GET /_cluster/allocation/explain
+
+GET /_cluster/settings
+
+GET /_cluster/health
+
+GET /_cluster/health/my-index-000001?level=shards
+
+POST /_cluster/reroute
+{
+  "commands": [
+    {
+      "move": {
+        "index": "test", "shard": 0,
+        "from_node": "node1", "to_node": "node2"
+      }
+    },
+    {
+      "allocate_replica": {
+        "index": "test", "shard": 1,
+        "node": "node3"
+      }
+    }
+  ]
+}
+
+GET /_cluster/state/<metrics>/<target>
+
+GET /_cluster/stats
+
+GET /_cluster/stats/nodes/<node_filter>
+
+PUT /_cluster/settings
+
+... many NODE related APIs
+Cross cluster related APIs
+______________________________________________________________________
