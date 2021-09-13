@@ -169,6 +169,6 @@ func main() {
 	//listOfKeys := []string{"ts", "Message","Qbitrate", "status","RawDataRate", "Bytes", "Requests"}
 	//fmt.Println(logfileToList("bulk.json", listOfKeys))
 
-	handleRequests()
+	//handleRequests()
 	//handleRequests2()
 }
