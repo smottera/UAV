@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const LOGFILE2 = "/home/vagrant/qunu_zynq_json_bob"
+//const LOGFILE2 = "/home/vagrant/qunu_zynq_json_bob"
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 
