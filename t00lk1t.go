@@ -5,6 +5,6 @@ import(
 )
 
 func main(){
-	fmt.Println("NIGGA PWEASE")
+	fmt.Println("PWEASE")
 }
 
