@@ -88,6 +88,7 @@ cv2.waitKey(0)
 # Gaussian Blur
 Gaussian = cv2.GaussianBlur(img, (7, 7), 0)
 #cv2.imshow('Gaussian Blurring', Gaussian)
+
 #cv2.waitKey(0)
   
 # Median Blur
