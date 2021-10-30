@@ -108,4 +108,17 @@ cv2.waitKey(0)
 # It is for removing/deleting created GUI window from screen and memory
 cv2.destroyAllWindows()
 
-contourDetector()
+#a 3x3 square black image from scratch
+img0 = np.zeros((3, 3), dtype=np.uint8)
+
+import os
+
+# Make an array of 120,000 random bytes.
+randomByteArray = bytearray(os.urandom(120000))
+flatNumpyArray = np.array(randomByteArray)
+# Convert the array to make a 400x300 grayscale image.
+grayImage = flatNumpyArray.reshape(300, 400)
+cv2.imwrite('RandomGray.png', grayImage)
+# Convert the array to make a 400x100 color image.
+bgrImage = flatNumpyArray.reshape(100, 400, 3)
+cv2.imwrite('RandomColor.png', bgrImage)
