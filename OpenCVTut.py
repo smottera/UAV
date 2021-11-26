@@ -60,6 +60,11 @@ img = cv2.imread("sr71.jpg", cv2.IMREAD_COLOR) #1, 0 , -1
 
 #split image into color spaces
 B, G, R = cv2.split(img)
+B, G, R = cv2.split(img2)
+B, G, R = cv2.split(img4)
+B, G, R = cv2.split(img5)
+B, G, R = cv2.split(img7)
+B, G, R = cv2.split(img4)
 
 #add or subtract two images using weights
 
