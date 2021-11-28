@@ -25,6 +25,9 @@ type controlVehicle struct {
 	speed         float32
 	emergencySTOP bool
 	takeOffPermit bool
+	Altitude	float32
+	rangeDistance	float32
+	
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
