@@ -2,7 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 var (
@@ -42,13 +46,32 @@ type telemetryPacket struct {
 func initSys() {
 	fmt.Println("yiii")
 }
+
+func handleRequests() {
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/dbug", testPage).Methods("GET")
+
+	log.Fatal(http.ListenAndServe(":8888", router))
+}
+
+func testPage(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	fmt.Fprintf(w, `{"RawDataRate":"70","Bytes":"70","Requests":"70","ts":"2021-04-12 18:09:21","Message":"Requests","Qbitrate":"70","status":"info"}`)
+
+}
+
 func main() {
 	now := time.Now()
 	fmt.Println("The time is ", now)
 
 	testPayload := controlPacket{uniqueID: "asd"}
-	string1 := "{uniqueID: \"" + testPayload.uniqueID + "\"}"
+	string1 := "{\"uniqueID\": \"" + testPayload.uniqueID + "\"}"
 	fmt.Println(string1)
+
+	handleRequests()
 
 	then := time.Now()
 	diff := then.Sub(now)
