@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -43,23 +45,13 @@ type telemetryPacket struct {
 	motorRPM        int
 }
 
-func getMission() {
-	fmt.Println("Get mission related data")
-}
+func initDrone() {
 
-func getControlLink() {
-	fmt.Println("Get control link related data")
-
-}
-
-func main() {
-	now := time.Now()
-	fmt.Println("The time is ", now)
-
-	resp, err := http.Get("http://localhost:8888/dbug")
+	resp, err := http.Get("http://localhost:8888/")
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 
 	//error checking of the ioutil.ReadAll() request
@@ -67,5 +59,72 @@ func main() {
 		fmt.Println("ERROR....! ", err)
 	}
 
-	fmt.Println(json.NewDecoder(bodyBytes))
+	fmt.Println(string(bodyBytes))
+}
+
+func getMission() {
+	fmt.Println("Get mission related data")
+}
+
+func updateTelemtryData() {
+	fmt.Println("Telemetry Data Updated")
+}
+
+func updateEmergencyVariables() {
+	fmt.Println("Emergency Variables set!")
+}
+
+//GETs latest control link data
+func getControlLink() {
+	fmt.Println("Get control link related data")
+
+	resp, err := http.Get("http://localhost:8888/")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+
+	//error checking of the ioutil.ReadAll() request
+	if err != nil {
+		fmt.Println("ERROR....! ", err)
+	}
+
+	b1 := []byte(string(bodyBytes))
+	var m map[string]string
+
+	err = json.Unmarshal(b1, &m)
+	if err != nil {
+		panic(err)
+	}
+
+	cBuffer := controlLinkStringTObuffer(m["controlLink"])
+	fmt.Println(cBuffer)
+}
+
+func controlLinkStringTObuffer(cl string) controlPacket {
+
+	buffer := controlPacket{}
+	s := strings.Split(cl, ",")
+	buffer.uniqueID = s[0]
+	buffer.throttle, _ = strconv.Atoi(s[1])
+	buffer.rudder, _ = strconv.Atoi(s[2])
+	buffer.aileron, _ = strconv.Atoi(s[3])
+	buffer.elevator, _ = strconv.Atoi(s[4])
+	buffer.aux1, _ = strconv.Atoi(s[5])
+	buffer.aux2, _ = strconv.Atoi(s[6])
+	buffer.aux3, _ = strconv.Atoi(s[7])
+
+	return buffer
+}
+
+func main() {
+
+	fmt.Println("Hai")
+
+	then := time.Now()
+	getControlLink()
+	now := time.Now()
+	diff := now.Sub(then)
+	fmt.Println("The response time is = ", diff)
 }

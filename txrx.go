@@ -1,8 +1,15 @@
+//..................THINGS TO DO
+//2. store all other RCLink, log, telemetry shit in buffer
+//4. test speed/reliability of emergency functions and disarm
+//5. drone.go should output sbus
+//6. Get serial data from USB joystick, send it (make it sendable) to drone.go
+
 package main
 
 import (
 	"fmt"
 	"log"
+
 	"net/http"
 	"time"
 
@@ -17,15 +24,18 @@ var (
 
 type controlPacket struct {
 	uniqueID   string
-	throttle   int
+	throttle   int //Channel 0
 	rudder     int
 	aileron    int
 	elevator   int
 	motorPower int
 	aux1       int
 	aux2       int
-	aux3       int
+	aux3       int //Channel 7
 }
+
+//Control syntax
+//{controlLink: "UAV007,1024,0,4096,3123,1123,412,4000,23"}
 
 type missionPacket struct {
 	latitude  float32
@@ -47,9 +57,13 @@ func initSys() {
 	fmt.Println("yiii")
 }
 
+func getJoystickData() {
+	fmt.Println("NIGGA PWEASE")
+}
+
 func handleRequests() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/dbug", testPage).Methods("GET")
+	router.HandleFunc("/", testPage).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8888", router))
 }
@@ -59,21 +73,27 @@ func testPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	fmt.Fprintf(w, `{"RawDataRate":"70","Bytes":"70","Requests":"70","ts":"2021-04-12 18:09:21","Message":"Requests","Qbitrate":"70","status":"info"}`)
+	fmt.Fprintf(w, testInputs())
 
 }
 
+//test ONLY CONTROL, ONLY STATUS, ONLY MISSION, ALL dATA, all permutations
+func testInputs() string {
+
+	string1 := "{"
+	string2 := "\"Timestamp\": \"" + time.Now().String() + "\""
+	string3 := ",\"controlLink\" : \"UAV007,1024,0,4096,3123,1123,412,4000,23\""
+
+	dispatch := string1 + string2 + string3 + "}"
+
+	fmt.Println(dispatch)
+
+	return dispatch
+}
+
 func main() {
-	now := time.Now()
-	fmt.Println("The time is ", now)
 
-	testPayload := controlPacket{uniqueID: "asd"}
-	string1 := "{\"uniqueID\": \"" + testPayload.uniqueID + "\"}"
-	fmt.Println(string1)
-
+	testInputs()
 	handleRequests()
 
-	then := time.Now()
-	diff := then.Sub(now)
-	fmt.Println("Execution time = ", diff)
 }
