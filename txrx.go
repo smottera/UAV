@@ -3,6 +3,7 @@
 //4. test speed/reliability of emergency functions and disarm
 //5. drone.go should output sbus
 //6. Get serial data from USB joystick, send it (make it sendable) to drone.go
+//7. Use UDP instead of TCP
 
 package main
 
