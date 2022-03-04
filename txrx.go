@@ -1,15 +1,44 @@
 //..................THINGS TO DO
-//
-//2. store all other RCLink, log, telemetry shit in buffer
-//4. test speed/reliability of emergency functions and disarm
-//5. drone.go should output sbus
-//6. Get serial data from USB joystick, send it (make it sendable) to drone.go
-//7. Implement dynamic + random test inputs for drone.go json buffered output
-//8. Use UDP for faster data transmission. (where latest data arrival matters timewise)
-//9. The gRPC framework is a high-performance, platform-neutral standard for making distributed function calls across a network.
-//10. Use pointers instead of generating new variables often. Reduces garbage collection effort
-//11. gRPC server/client or bidirectional setup could be 5x faster than net/http JSON
 
+/*
+2. store all other RCLink, log, telemetry shit in buffer
+4. test speed/reliability of emergency functions and disarm
+5. drone.go should output sbus
+6. Get serial data from USB joystick, send it (make it sendable) to drone.go
+7. Implement dynamic + random test inputs for drone.go json buffered output
+8. Use UDP for faster data transmission. (where latest data arrival matters timewise)
+9. The gRPC framework is a high-performance, platform-neutral standard for making distributed function calls across a network.
+10. Use pointers instead of generating new variables often. Reduces garbage collection effort
+11. gRPC server/client or bidirectional setup could be 5x faster than net/http JSON
+12. Implement a 3D pathplanning function
+13. Implement a watchdog function
+14. Implement security measures for backend (software security. Hackproof)
+15. Implement video transfer protocol
+16. Implement camera zoom, focus and gimbal control functions
+17. Implement mission protocol + queue
+18. Implement landing protocol
+19. Implement battery protocol
+20. Implement Drone Social Network (drone ID, drone specific data, authorization)
+21. Implement Unmanned Traffic Management function with the help of the above info
+22. Implement functions/measures during signal loss
+23. Implement necessary backend storage and caching services as needed
+
+//NETFLIX Video streaming softwar stack:
+video data stored in noSQL (DynamoDB),
+then cached by AWScloudFront for low latency transmission
+Different resolutions are available for streaming. A video transcoder is used for
+optimized transmission of data
+
+
+/////
+
+txrx.go   <<<<<<<<<<<<<<<< drone.go
+ telemetry data
+
+ txrx.go >>>>>>>>>>>>>>>>>>>> drone.go
+ control data
+
+*/
 package main
 
 import (
