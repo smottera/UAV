@@ -7,7 +7,7 @@
 6. Get serial data from USB joystick, send it (make it sendable) to drone.go
 7. Implement dynamic + random test inputs for drone.go json buffered output
 8. Use UDP for faster data transmission. (where latest data arrival matters timewise)
-9. The gRPC framework is a high-performance, platform-neutral standard for making distributed function calls across a network.
+9. The gRPC (works but complicated) framework is a high-performance, platform-neutral standard for making distributed function calls across a network.
 10. Use pointers instead of generating new variables often. Reduces garbage collection effort
 11. gRPC server/client or bidirectional setup could be 5x faster than net/http JSON
 12. Implement a 3D pathplanning function
