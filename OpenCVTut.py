@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import matplotlib
 
+
 def contourDetector():
 	# Reading image
 	font = cv2.FONT_HERSHEY_COMPLEX
