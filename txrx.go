@@ -16,6 +16,7 @@
 20. Implement Drone Social Network (drone ID, drone specific data, authorization)
 21. Implement Unmanned Traffic Management function with the help of the above info
 23. Implement necessary backend storage and caching services as needed
+24. Use protobuffer byte type instead of uint16 (optimization step)
 
 
 */
