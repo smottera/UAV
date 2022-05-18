@@ -1,0 +1,70 @@
+syntax = "proto3" ;
+package uav ;
+
+service uavControl {
+	rpc sendDroneControl (stream ControlPacket) return (acknowledged) ;
+}
+
+service telemetry {
+	rpc getTelemetry (acknowledged) return (stream telemetryPacket)
+}
+
+
+message priorityData {
+	string timestamp = 1 ;
+	bool emergencyFlag = 2 ;
+	bool returnToHome = 3 ;
+	bool disarm = 4 ;
+	int32 mode = 5 ;
+	float32 homeAlt = 6 ;
+	float32 homeLat = 7 ;
+	float32 homeLon = 8 ;
+}
+
+message missionPacket {
+	int32 missionID = 1 ;
+	float32 cruiseSpeed = 2 ;
+	float32 altitude = 3 ;
+	float32 latitude = 4;
+	float32 longitude = 5;
+	bool emergency = 6;
+}
+
+message telemetryPacket {
+	float32 batteryVoltage = 1 ;
+	float32 currentDraw = 2 ;
+	float32 altitude = 3 ;
+	float32 latitude = 4;
+	float32 longitude = 5;
+	float32 temperature = 6;
+	float32 motorRPM = 7;
+	float32 aux3 = 8;
+}
+
+message cameraControlPacket {
+	int32 pan = 1 ;
+	int32 tilt = 2 ;
+	int32 record = 3 ;
+	int32 focus = 4;
+	float32 zoom = 5;
+	bool flash = 6;
+}
+
+message controlPacket {
+	int32 throttle = 1 ;
+	int32 rudder = 2 ;
+	int32 aileron = 3 ;
+	int32 elevator = 4;
+	int32 motorPower = 5;
+	int32 aux1 = 6;
+	int32 aux2 = 7;
+	int32 aux3 = 8;
+}
+
+message acknowledged {
+	string = 1 ;
+}
+
+message uploadImage {
+	byte = 1;
+}
