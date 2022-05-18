@@ -16,29 +16,31 @@ message priorityData {
 	bool returnToHome = 3 ;
 	bool disarm = 4 ;
 	int32 mode = 5 ;
-	float32 homeAlt = 6 ;
-	float32 homeLat = 7 ;
-	float32 homeLon = 8 ;
+	float homeAlt = 6 ;
+	float homeLat = 7 ;
+	float homeLon = 8 ;
+	bool safe2land = 9 ;
 }
 
 message missionPacket {
 	int32 missionID = 1 ;
-	float32 cruiseSpeed = 2 ;
-	float32 altitude = 3 ;
-	float32 latitude = 4;
-	float32 longitude = 5;
+	float cruiseSpeed = 2 ;
+	float altitude = 3 ;
+	float latitude = 4;
+	float longitude = 5;
 	bool emergency = 6;
 }
 
 message telemetryPacket {
-	float32 batteryVoltage = 1 ;
-	float32 currentDraw = 2 ;
-	float32 altitude = 3 ;
-	float32 latitude = 4;
-	float32 longitude = 5;
-	float32 temperature = 6;
-	float32 motorRPM = 7;
-	float32 aux3 = 8;
+	float batteryVoltage = 1 ;
+	float currentDraw = 2 ;
+	float altitude = 3 ;
+	float latitude = 4;
+	float longitude = 5;
+	float temperature = 6;
+	float motorRPM = 7;
+	float gyro = 8;
+	float accel = 9;
 }
 
 message cameraControlPacket {
@@ -46,7 +48,7 @@ message cameraControlPacket {
 	int32 tilt = 2 ;
 	int32 record = 3 ;
 	int32 focus = 4;
-	float32 zoom = 5;
+	float zoom = 5;
 	bool flash = 6;
 }
 
@@ -66,5 +68,5 @@ message acknowledged {
 }
 
 message uploadImage {
-	byte = 1;
+	bytes = 1;
 }
