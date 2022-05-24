@@ -1,22 +1,20 @@
 //..................THINGS TO DO
 
 /*
-2. store all other RCLink, log, telemetry shit in buffer
-4. test speed/reliability of emergency functions and disarm
-5. drone.go should output sbus
-6. Get serial data from USB joystick, send it (make it sendable) to drone.go
-7. Implement dynamic + random test inputs for drone.go json buffered output
-9. The gRPC framework is a high-performance, platform-neutral standard for making distributed function calls across a network.
-10. Use pointers instead of generating new variables often. Reduces garbage collection effort
-11. gRPC server/client or bidirectional setup could be 5x faster than net/http JSON
-13. Implement a watchdog function
-14. Implement security measures for backend (software security. Hackproof)
-15. Implement video transfer protocol
-16. Implement camera zoom, focus and gimbal control functions
-20. Implement Drone Social Network (drone ID, drone specific data, authorization)
-21. Implement Unmanned Traffic Management function with the help of the above info
-23. Implement necessary backend storage and caching services as needed
-24. Design and build a scheduler?
+
+1. drone.go should output sbus
+2. Get serial data from USB joystick, send it (make it sendable) to drone.go
+3. Use pointers instead of generating new variables often. Reduces garbage collection effort
+4. Implement a watchdog function
+5. Implement Drone Social Network (drone ID, drone specific data, authorization)
+6. Implement Unmanned Traffic Management function with the help of the above info
+7. Implement necessary backend storage and caching services as needed
+8. Design and build a scheduler?
+9. create stubClient, stubServer, stubRepeater subPackages?
+10. Diversify your portfolio of databases based on application. MongoDB for highthoughout, ES for search
+11. Come up with basic bidirectional services -> setup new protofile and structs in go files
+12. test new proto file -> Test Latency and reliability -> test on SoC -> test under different network circumstances
+13. Test picture/video transmission
 
 
 */
