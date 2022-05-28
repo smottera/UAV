@@ -9,7 +9,6 @@ service telemetry {
 	rpc getTelemetry (acknowledged) return (stream telemetryPacket)
 }
 
-
 message priorityData {
 	string timestamp = 1 ;
 	bool emergencyFlag = 2 ;
