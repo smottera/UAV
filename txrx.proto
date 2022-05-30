@@ -1,12 +1,17 @@
-syntax = "proto3" ;
-package uav ;
+syntax = "proto3";
 
-service uavControl {
-	rpc sendDroneControl (stream ControlPacket) return (acknowledged) ;
+package protofiles;
+
+message Person {
+    
+    string name = 1;
+    int32 id = 2; // Unique ID number for this person.
+    string email = 3;
+
 }
-
-service telemetry {
-	rpc getTelemetry (acknowledged) return (stream telemetryPacket)
+// Our address book file is just one of these.
+message AddressBook {
+    repeated Person people = 1;
 }
 
 message priorityData {
@@ -63,9 +68,19 @@ message controlPacket {
 }
 
 message acknowledged {
-	string = 1 ;
+	string a = 1 ;
 }
 
 message uploadImage {
-	bytes = 1;
+	bytes b = 1;
+}
+
+/////////////////////////////////////
+
+service uavControl {
+	rpc sendDroneControl (stream controlPacket) returns (acknowledged);
+}
+
+service telemetry {
+	rpc getTelemetry (acknowledged) returns (stream telemetryPacket);
 }
