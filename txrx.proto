@@ -2,10 +2,13 @@ syntax = "proto3";
 
 package protofiles;
 
+
+option go_package = "./protofiles";
+
 message Person {
     
     string name = 1;
-    int32 id = 2; // Unique ID number for this person.
+    int32 idd = 2; // Unique ID number for this person.
     string email = 3;
 
 }
@@ -79,8 +82,6 @@ message uploadImage {
 
 service uavControl {
 	rpc sendDroneControl (stream controlPacket) returns (acknowledged);
-}
 
-service telemetry {
 	rpc getTelemetry (acknowledged) returns (stream telemetryPacket);
 }
