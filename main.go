@@ -1,4 +1,10 @@
-//build all the control structs here. then copy to txrx.go once working
+//setup or initialize COMM variables
+//setup sever-side streaming, client-side streaming and bidirectional streaming services/interfaces and test
+//compare performance. Introduce more real world tests
+//setup gateway, test across the internet
+// test with multiple server / client instances
+// test what happens to stream during connection loss
+// txrx.go should be able to heal connection after loss ASAP
 package main
 
 import (
