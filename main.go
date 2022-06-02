@@ -1,43 +1,27 @@
 //build all the control structs here. then copy to txrx.go once working
-//upgrade golang version then try bidirectional gRPC
 package main
 
 import (
 	"fmt"
 
+	pb "./protofiles"
 	"github.com/golang/protobuf/proto"
 )
 
-type cameraControlPacket struct {
-	pan    int32
-	tilt   int32
-	record int32
-	focus  int32
-	zoom   float32
-	flash  bool
-}
-
 func main() {
 
-	p := &cameraControlPacket{
-		1,
-		2,
-		3,
-		4,
-		5.11,
-		false,
+	p := &pb.CameraControlPacket{
+		Pan:                  10,
+		Tilt:                 20,
+		Record:               30,
+		Focus:                40,
+		Zoom:                 550,
+		Flash:                false,
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     []byte{},
+		XXX_sizecache:        0,
 	}
-	p1 := &cameraControlPacket{}
-
-	/*
-
-		p := &pb.Person{
-			Id:    0,
-			Name:  "Roger F",
-			Email: "rf@example.com",
-		}
-
-		p1 := &pb.Person{} */
+	p1 := &pb.CameraControlPacket{}
 
 	body, _ := proto.Marshal(p)
 
