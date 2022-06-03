@@ -1,16 +1,16 @@
 /*
-_________________________________________________________________________
+___________________________________________________________________________
 
                 golang daemon
                  ___________
  GUI <---------> | TxRx.go | 1-------> sbus (directly talk to FC)
                  |         | 2-------> virtual joystick (Use with RC sim)
-				 |         | 3-------> autonomous flight controller
-				 |         |        (control SoC on UAV [Joystickless])
+		 |         | 3-------> autonomous flight controller
+		 |         |          (control SoC on UAV [Joystickless])
                  |_________| 4-------> image/video transmission
 
 
-_________________________________________________________________________
+___________________________________________________________________________
 
 
 FROM TxRx.go
