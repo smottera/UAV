@@ -1,13 +1,28 @@
 /*
 ___________________________________________________________________________
 
-                golang daemon
-                 ___________
- GUI <---------> | TxRx.go | 1-------> sbus (directly talk to FC)
-                 |         | 2-------> virtual joystick (Use with RC sim)
-		 |         | 3-------> autonomous flight controller
-		 |         |          (control SoC on UAV [Joystickless])
-                 |_________| 4-------> image/video transmission
+                                golang daemon
+                                                ___________
+                                GUI <---------> | TxRx.go | 
+                                                |         | 1--------> (simple OS) Fully Automatic pilot intelligence, 
+                   Commandline shell <--------> |         |                    UAV comms established, Systems initialized, Mission path planning,
+						|	  |		      path to rigid body dynamics matrices.
+ NLP / Human Behavior based control    <------> |         | 	                  (This is the main logic! Just 1 step behind virtual joystick output
+                                                | TxRx.go | 
+      xbox/playstation/thrustmaster  ---------> |         | 2-------> virtual joystick output
+                                                |         |                            (get values from fast buffers, output to virtual driver)
+            Custom Physical Joystick ---------> | TxRx.go |                            (Use with RC sim)
+                                                |         |                            (Must be integrated with a C++ windows driver)
+						|	  |			      
+	                                        |         | 3-------> sbus output
+                                                | TxRx.go |           (directly talk to FC) (Must be integrated with Golang uart packages
+	                                        |         |
+	                                        |         | 4-------> Traffic Management memebership
+		                                | TxRx.go |          (depends on a PostgreSQL DB)
+                                                |         |
+                                                |_________| 5-------> image/video transmission
+								      (frames are captured, compressed and minced before dispatch to cloud) 
+                                                                      (images/frames need to be memcached in Redis 
 
 
 ___________________________________________________________________________
