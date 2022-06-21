@@ -1,33 +1,28 @@
 /*
 ___________________________________________________________________________
-
                                 golang daemon
                                                 ___________
-                                GUI <---------> | TxRx.go | 
-                                                |         | 1--------> (simple OS) Fully Automatic pilot intelligence, 
+                                GUI <---------> | TxRx.go |
+                                                |         | 1--------> (simple OS) Fully Automatic pilot intelligence,
                    Commandline shell <--------> |         |                    UAV comms established, Systems initialized, Mission path planning,
-						|	  |		      path to rigid body dynamics matrices.
+												|	      |		      path to rigid body dynamics matrices.
  NLP / Human Behavior based control    <------> |         | 	                  (This is the main logic! Just 1 step behind virtual joystick output
-                                                | TxRx.go | 
+                                                | TxRx.go |
       xbox/playstation/thrustmaster  ---------> |         | 2-------> virtual joystick output
                                                 |         |                            (get values from fast buffers, output to virtual driver)
             Custom Physical Joystick ---------> | TxRx.go |                            (Use with RC sim)
                                                 |         |                            (Must be integrated with a C++ windows driver)
-						|	  |			      
-	                                        |         | 3-------> sbus output
+												|	      |
+	                                        	|         | 3-------> sbus output
                                                 | TxRx.go |           (directly talk to FC) (Must be integrated with Golang uart packages
-	                                        |         |
-	                                        |         | 4-------> Traffic Management memebership
-		                                | TxRx.go |          (depends on a PostgreSQL DB)
+	                                        	|         |
+	                                        	|         | 4-------> Traffic Management memebership
+		                                        | TxRx.go |          (depends on a PostgreSQL DB)
                                                 |         |
                                                 |_________| 5-------> image/video transmission
-								      (frames are captured, compressed and minced before dispatch to cloud) 
-                                                                      (images/frames need to be memcached in Redis 
-
-
+								      									(frames are captured, compressed and minced before dispatch to cloud)
+                                                                      	(images/frames need to be memcached in Redis
 ___________________________________________________________________________
-
-
 FROM TxRx.go
 1. Implement a watchdog function
 5. Implement Drone Social Network (drone ID, drone specific data, authorization)
@@ -48,11 +43,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"time"
 
 	pb "./protofiles"
 	"github.com/golang/protobuf/proto"
+)
+
+const (
+	port      = ":50051"
+	noOfSteps = 3
 )
 
 //priority 0
@@ -127,6 +128,28 @@ func droneDummyDataGenerator(iterate int, delay int) {
 	}
 }
 
+// server is used to create uavControlServer.
+type server struct{}
+
+func (s *server) getTelemetry(in *pb.Acknowledged, stream pb.UavControl_GetTelemetryServer) error {
+	log.Printf("Got request for mor....")
+	log.Printf("a: $%s", in.A)
+	// Send streams here
+	for i := 0; i < noOfSteps; i++ {
+		// Simulating I/O or Computation process using sleep........
+		// Usually this will be saving money transfer details in DB or
+		// talk to the third party API
+		time.Sleep(time.Second * 2)
+		// Once task is done, send the successful message back to the client
+		if err := stream.Send(&pb.TelemetryPacket{BatteryVoltage: 1.234, CurrentDraw: 3.2, Altitude: 33.92}); err != nil {
+			log.Fatalf("%v.Send(%v) = %v", stream, "status", err)
+		}
+	}
+
+	log.Printf("Successfully transfered amount $%v ", in.A)
+	return nil
+}
+
 func initSys() {
 	fmt.Println("Hello Early Adopter. Welcome to TxRx.go")
 	batteryService()
@@ -148,11 +171,11 @@ func batteryService() {
 	//check health of all cells
 	//log data
 	//calculate range, lifespan, next service date
-	fmt.Println("battery okay status ... unknown")
+	fmt.Println("Battery status ... unknown")
 }
 
 func missionService() {
-	fmt.Println("Ready for any mission ...!")
+	fmt.Println("Mission scheduler empty ...!")
 	//inputs: mission start time, deadline (time), description, distance,
 	// path[[gcode]], landing bool?, payload info, attempts, failure?complete?,
 	//return address
@@ -198,7 +221,7 @@ func getJoystickData() {
 	fmt.Println("NIGGA PWEASE")
 }
 
-func main() {
+func testProtoMarshalling() {
 
 	p := &pb.CameraControlPacket{
 		Pan:                  0,
@@ -213,13 +236,24 @@ func main() {
 	}
 	p1 := &pb.CameraControlPacket{}
 
+	then := time.Now()
 	body, _ := proto.Marshal(p)
 
 	_ = proto.Unmarshal(body, p1)
+
+	fmt.Println("---------------------------------------------------")
 
 	fmt.Println("Original struct loaded from proto file:", p)
 	fmt.Println("Marshaled proto data: ", body)
 	fmt.Println("Unmarshaled struct: ", p1)
 
+	now := time.Now()
+	diff := now.Sub(then)
+	fmt.Println("Time taken: ", diff)
+
+}
+func main() {
+
 	initSys()
+	//testProtoMarshalling()
 }
