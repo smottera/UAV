@@ -4,16 +4,6 @@ package protofiles;
 
 option go_package = "./protofiles";
 
-////////////////SERVICES/////////////////////
-
-service uavControl {
-	rpc sendDroneControl (stream controlPacket) returns (acknowledged);
-
-	rpc getTelemetry (acknowledged) returns (stream telemetryPacket);
-}
-
-////////////////// MESSAGES ////////////////
-
 message priorityData {
 	string timestamp = 1 ;
 	bool emergencyFlag = 2 ;
@@ -67,10 +57,34 @@ message controlPacket {
 	int32 aux3 = 8;
 }
 
+message headTracking {
+	float xDegrees = 1;
+	float yDegrees = 2;
+	float zDegrees = 3;
+}
+
+message controllerOutputFeedback {
+	int32 axis1 = 1;
+	int32 axis2 = 2;
+	int32 axis3 = 3;
+	int32 axis4 = 4;
+	bool swtich1 = 5;
+	bool swtich2 = 6;
+	bool swtich3 = 7;
+
+}
+
 message acknowledged {
 	string a = 1 ;
 }
 
 message uploadImage {
 	bytes b = 1;
+}
+
+
+service uavControl {
+	rpc sendDroneControl (stream controlPacket) returns (acknowledged) {}
+
+	rpc getTelemetry (acknowledged) returns (stream telemetryPacket) {}
 }
