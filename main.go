@@ -39,16 +39,26 @@ FROM TxRx.go
 // test with multiple server / client instances
 // test what happens to stream during connection loss
 // txrx.go should be able to heal connection after loss ASAP
+
+/*
+protoc -I ./ protofiles/person.proto --go_out=plugins=grpc:.
+protoc -I ./ protofiles/person.proto --go-grpc_out=plugins=grpc:.
+
+*/
+
 package main
 
 import (
 	"fmt"
 	"log"
 	"math/rand"
+	"net"
 	"time"
 
 	pb "./protofiles"
 	"github.com/golang/protobuf/proto"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 const (
@@ -129,9 +139,11 @@ func droneDummyDataGenerator(iterate int, delay int) {
 }
 
 // server is used to create uavControlServer.
-type server struct{}
+type server struct {
+	pb.UnimplementedUavControlServer
+}
 
-func (s *server) getTelemetry(in *pb.Acknowledged, stream pb.UavControl_GetTelemetryServer) error {
+func (s *server) GetTelemetry(in *pb.Acknowledged, stream pb.UavControl_GetTelemetryServer) error {
 	log.Printf("Got request for mor....")
 	log.Printf("a: $%s", in.A)
 	// Send streams here
@@ -139,7 +151,7 @@ func (s *server) getTelemetry(in *pb.Acknowledged, stream pb.UavControl_GetTelem
 		// Simulating I/O or Computation process using sleep........
 		// Usually this will be saving money transfer details in DB or
 		// talk to the third party API
-		time.Sleep(time.Second * 2)
+		time.Sleep(time.Second * 1)
 		// Once task is done, send the successful message back to the client
 		if err := stream.Send(&pb.TelemetryPacket{BatteryVoltage: 1.234, CurrentDraw: 3.2, Altitude: 33.92}); err != nil {
 			log.Fatalf("%v.Send(%v) = %v", stream, "status", err)
@@ -256,4 +268,22 @@ func main() {
 
 	initSys()
 	//testProtoMarshalling()
+
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatalf("Failed to listen: %v", err)
+	}
+
+	// Create a new GRPC Server
+	s := grpc.NewServer()
+
+	// Register it with Proto service
+	pb.RegisterUavControlServer(s, &server{})
+
+	// Register reflection service on gRPC server.
+	reflection.Register(s)
+
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("Failed to serve: %v", err)
+	}
 }
