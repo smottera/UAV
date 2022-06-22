@@ -24,22 +24,24 @@ ___________________________________________________________________________
                                                                       	(images/frames need to be memcached in Redis
 ___________________________________________________________________________
 FROM TxRx.go
-1. Implement a watchdog function
-5. Implement Drone Social Network (drone ID, drone specific data, authorization)
-6. Implement Unmanned Traffic Management function with the help of the above info
-7. Implement necessary backend storage and caching services as needed
-8. Design and build a scheduler?
-9. create stubClient, stubServer, stubRepeater subPackages?
-12. test new proto file -> Test Latency and reliability -> test on SoC -> test under different network circumstances
+Build supporting data structures, primary variables.
+Build a function that randomizes these variables for future testing purposes
+Build other 3 variants of gRPC services for testing
+Test over LAN and then internet (NGINX required?)
+
+
 */
 
-//setup sever-side streaming, client-side streaming and bidirectional streaming services/interfaces and test
-//compare performance. Introduce more real world tests
-//setup gateway, test across the internet
+// TESTS
 // test with multiple server / client instances
 // test what happens to stream during connection loss
 // txrx.go should be able to heal connection after loss ASAP
-
+//12. test new proto file -> Test Latency and reliability -> test on SoC -> test under different network circumstances
+//5. Implement Drone Social Network (drone ID, drone specific data, authorization)
+//6. Implement Unmanned Traffic Management function with the help of the above info
+//7. Implement necessary backend storage and caching services as needed
+//8. Design and build a scheduler?
+//9. create stubClient, stubServer, stubRepeater subPackages?
 /*
 protoc -I ./ protofiles/person.proto --go_out=plugins=grpc:.
 protoc -I ./ protofiles/person.proto --go-grpc_out=plugins=grpc:.
