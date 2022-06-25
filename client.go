@@ -1,6 +1,8 @@
+//This is the client stub (UAV/Robot backend)
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 
@@ -37,7 +39,10 @@ func ReceiveStream(client pb.UavControlClient, request *pb.Acknowledged) {
 			log.Fatalf("%v.GetTelemetry(_) = _, %v", client, err)
 		}
 
-		log.Printf("Stus: %f, Open: %f", response.BatteryVoltage, response.CurrentDraw)
+		fmt.Println("Battery Voltage: %f", "Current Draw: %f", "Longitude: %f", "Latitude: %f",
+			"Altitude: %f", "Temperature: %f", "MotorRPM: %f", "Gyro: %f", "Accel: %f",
+			response.BatteryVoltage, response.CurrentDraw, response.Longitude, response.Latitude,
+			response.Altitude, response.Temperature, response.MotorRPM, response.Gyro, response.Accel)
 	}
 }
 
