@@ -97,7 +97,7 @@ import (
 
 const (
 	port      = ":50051"
-	noOfSteps = 12
+	noOfSteps = 50
 )
 
 var (
@@ -142,51 +142,6 @@ var (
 	repeat     bool
 )
 
-func droneDummyDataGenerator(iterate int, delay int) {
-
-	for j := 0; j <= iterate; j++ {
-
-		//init these variables
-
-		rand1 := float32(rand.Float64())
-		rand2 := int(rand.Int())
-		timestamp := time.Now()
-
-		//priority 0
-		batteryLow = true
-		safe2Land = false
-		returnToHome = false
-		disarm = true
-		mode = 10 * rand2
-		homeLat = 1501 * rand1
-		homeLon = 1505 * rand1
-		homeAlt = 1801 * rand1
-
-		//Control params
-		throttle = 1500 //Channel 0
-		rudder = 1501 * rand2
-		aileron = 1501 * rand2
-		elevator = 1501 * rand2
-		motorPower = 1501 * rand2
-		aux1 = 1501 * rand2
-		aux2 = 1501 * rand2
-		aux3 = 1501 * rand2 //Channel 7
-
-		//telemetry randz
-		batteryVoltage = 1500 * rand1
-		currentDraw = 1501 * rand1
-		longitude = 1502 * rand1
-		latitude = 1503 * rand1
-		altitude = 1504 * rand1
-		temperature = 1505 * rand1
-		motorRPM = 1506 * rand1
-		gyro = 1507 * rand1
-		accel = 1508 * rand1
-
-		fmt.Println("Battery Voltage", batteryVoltage, currentDraw, homeLat, homeLon, delay, timestamp)
-	}
-}
-
 // server is used to create uavControlServer.
 type server struct {
 	pb.UnimplementedUavControlServer
@@ -214,6 +169,8 @@ func (s *server) GetTelemetry(in *pb.Acknowledged, stream pb.UavControl_GetTelem
 
 			log.Fatalf("%v.Send(%v) = %v", stream, "status", err)
 		}
+
+		droneDummyDataGenerator()
 	}
 
 	log.Printf("Successfully transfered amount $%v ", in.A)
@@ -270,12 +227,55 @@ func testTelemetry() {
 		log.Fatalf("Failed to serve: %v", err)
 	}
 }
+
+func droneDummyDataGenerator() {
+
+	//init these variables
+
+	rand1 := float32(rand.Float64())
+	rand2 := int(rand.Int())
+	timestamp := time.Now()
+
+	//priority 0
+	batteryLow = true
+	safe2Land = false
+	returnToHome = false
+	disarm = true
+	mode = 10 * rand2
+	homeLat = 1501 * rand1
+	homeLon = 1505 * rand1
+	homeAlt = 1801 * rand1
+
+	//Control params
+	throttle = 1500 //Channel 0
+	rudder = 1501 * rand2
+	aileron = 1501 * rand2
+	elevator = 1501 * rand2
+	motorPower = 1501 * rand2
+	aux1 = 1501 * rand2
+	aux2 = 1501 * rand2
+	aux3 = 1501 * rand2 //Channel 7
+
+	//telemetry randz
+	batteryVoltage = 1500 * rand1
+	currentDraw = 1501 * rand1
+	longitude = 1502 * rand1
+	latitude = 1503 * rand1
+	altitude = 1504 * rand1
+	temperature = 1505 * rand1
+	motorRPM = 1506 * rand1
+	gyro = 1507 * rand1
+	accel = 1508 * rand1
+
+	fmt.Println("Battery Voltage", batteryVoltage, currentDraw, homeLat, homeLon, timestamp)
+
+}
+
 func main() {
 
 	//initSys()
 	//testProtoMarshalling()
 
-	droneDummyDataGenerator(50, 1)
 	testTelemetry()
 
 }
