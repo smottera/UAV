@@ -33,7 +33,19 @@ func main() {
 	CheckError(err)
 
 	fmt.Println("Connected!")
+	defer rows.Close()
+for rows.Next() {
+    var name string
+    var roll int
+ 
+    err = rows.Scan(&name, &roll)
+    CheckError(err)
+ 
+    fmt.Println(name, roll)
 }
+}
+
+
 
 func CheckError(err error) {
 	if err != nil {
