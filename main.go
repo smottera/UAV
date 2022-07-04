@@ -1,5 +1,4 @@
-/*
-___________________________________________________________________________
+/*___________________________________________________________________________
                                 golang daemon
                                                 ___________
                                 GUI <---------> | TxRx.go |
@@ -12,7 +11,7 @@ ___________________________________________________________________________
                                                 |         |                            (get values from fast buffers, output to virtual driver)
             Custom Physical Joystick ---------> | TxRx.go |                            (Use with RC sim)
                                                 |         |                            (Must be integrated with a C++ windows driver)
-												|	      |
+	  Fully Automatic Piloting System ------->  |	      |
 	                                        	|         | 3-------> sbus output
                                                 | TxRx.go |           (directly talk to FC) (Must be integrated with Golang uart packages
 	                                        	|         |
@@ -23,29 +22,30 @@ ___________________________________________________________________________
 								      									(frames are captured, compressed and minced before dispatch to cloud)
                                                                       	(images/frames need to be memcached in Redis
 ___________________________________________________________________________
-FROM TxRx.go
-1. Implement a watchdog function
-5. Implement Drone Social Network (drone ID, drone specific data, authorization)
-6. Implement Unmanned Traffic Management function with the help of the above info
-7. Implement necessary backend storage and caching services as needed
-8. Design and build a scheduler?
-9. create stubClient, stubServer, stubRepeater subPackages?
-12. test new proto file -> Test Latency and reliability -> test on SoC -> test under different network circumstances
-*/
 
-//setup sever-side streaming, client-side streaming and bidirectional streaming services/interfaces and test
+-----TxRx.go
+Well defined milestones:
+1. Functional and optimized bidirectional comms.
+Live video streaming.
+Mission and airtraffic management.
+Dashboard/Frontend for dronemediaplatform.
+S.Bus output for flight controllers.
+Computer Controlled UAVs and USVs system (autopilot, waypoint, pathPlanning, etc).
+Fully functioning and necessary backend drivers for databases(redis and postgres).
+
+-----Development procedure:
+test new proto file -> Test Latency and reliability -> test on SoC -> test under different network circumstances
+
+-----Misc ideas:
+watchdog function
+Design and build a scheduler?
+create stubClient, stubServer, stubRepeater subPackages?
+setup sever-side streaming, client-side streaming and bidirectional streaming services/interfaces and test
 //compare performance. Introduce more real world tests
 //setup gateway, test across the internet
 // test with multiple server / client instances
 // test what happens to stream during connection loss
 // txrx.go should be able to heal connection after loss ASAP
-
-/*
-protoc -I ./ protofiles/person.proto --go_out=plugins=grpc:.
-protoc -I ./ protofiles/person.proto --go-grpc_out=plugins=grpc:.
-
-*/
-
 //get list of of all peripherals connected
 //check wireless connections
 //check communication with HQ/cloud
@@ -79,7 +79,12 @@ protoc -I ./ protofiles/person.proto --go-grpc_out=plugins=grpc:.
 //check if sbus output to microcontroller is okay
 //in case of signal loss: continue with current path? path plan a new Return to home then land
 
-//This is the Server Stub (GQC Backend!)
+
+*/
+
+//protoc -I ./ protofiles/person.proto --go_out=plugins=grpc:.
+//protoc -I ./ protofiles/person.proto --go-grpc_out=plugins=grpc:.
+
 package main
 
 import (
@@ -271,9 +276,15 @@ func droneDummyDataGenerator() {
 
 }
 
+func initSys() {
+	fmt.Println("System Initialization has started ... ")
+	//example mission Travel from point a to b
+
+}
+
 func main() {
 
-	//initSys()
+	initSys()
 	//testProtoMarshalling()
 
 	testTelemetry()
