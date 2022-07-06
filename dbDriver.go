@@ -3,11 +3,15 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
+	"github.com/go-redis/redis"
 	_ "github.com/lib/pq"
 )
+
+var ctx = context.Background()
 
 const (
 	host     = "localhost"
@@ -17,7 +21,7 @@ const (
 	dbname   = "<dbname>"
 )
 
-func main() {
+func connectToPSQL() {
 	// connection string
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
@@ -33,19 +37,25 @@ func main() {
 	CheckError(err)
 
 	fmt.Println("Connected!")
-	defer rows.Close()
-for rows.Next() {
-    var name string
-    var roll int
- 
-    err = rows.Scan(&name, &roll)
-    CheckError(err)
- 
-    fmt.Println(name, roll)
-}
 }
 
+func connectToRedis() {
+	fmt.Println("Go Redis!")
 
+	client := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	pong, err := client.Ping(ctx).Result()
+	fmt.Println(pong, err)
+}
+
+func main() {
+	//connectToPSQL()
+	connectToRedis()
+}
 
 func CheckError(err error) {
 	if err != nil {
