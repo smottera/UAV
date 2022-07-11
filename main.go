@@ -85,6 +85,11 @@ setup sever-side streaming, client-side streaming and bidirectional streaming se
 //protoc -I ./ protofiles/person.proto --go_out=plugins=grpc:.
 //protoc -I ./ protofiles/person.proto --go-grpc_out=plugins=grpc:.
 
+//reduce program complexity and abstraction
+//catch error exceptions correctly
+//deep classes > shallow classes
+//Unix file I/O is incredibly well designed
+
 package main
 
 import (
