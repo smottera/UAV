@@ -25,13 +25,16 @@ ___________________________________________________________________________
 
 -----TxRx.go
 Well defined milestones:
-1. Functional and optimized bidirectional comms.
+Functional and optimized bidirectional comms.
 Live video streaming.
 Mission and airtraffic management.
 Dashboard/Frontend for dronemediaplatform.
 S.Bus output for flight controllers.
 Computer Controlled UAVs and USVs system (autopilot, waypoint, pathPlanning, etc).
 Fully functioning and necessary backend drivers for databases(redis and postgres).
+Figure out handling Authentication.
+gRPC gateway should allow internet wide comms.
+Chapters 8-12 in PDF
 
 -----Development procedure:
 test new proto file -> Test Latency and reliability -> test on SoC -> test under different network circumstances
