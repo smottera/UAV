@@ -85,7 +85,9 @@ setup sever-side streaming, client-side streaming and bidirectional streaming se
 
 */
 
+//This works:
 //protoc -I ./ protofiles/person.proto --go_out=plugins=grpc:.
+//not needed:
 //protoc -I ./ protofiles/person.proto --go-grpc_out=plugins=grpc:.
 
 //reduce program complexity and abstraction
