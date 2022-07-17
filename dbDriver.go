@@ -1,5 +1,13 @@
 //middleware between backend services and postgres (and/or redis)
 //https://golangdocs.com/golang-postgresql-example
+
+/*
+postgres notes:
+ \l lists all databases
+ \du+ lists all roles
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO <userName>;
+*/
 package main
 
 import (
@@ -16,10 +24,45 @@ var ctx = context.Background()
 const (
 	host     = "localhost"
 	port     = 5432
-	user     = "postgres"
-	password = "<password>"
-	dbname   = "<dbname>"
+	user     = "samu"
+	password = "samu"
+	dbname   = "samudb"
 )
+
+func connectToPSQL() {
+	// connection string
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+	// open database
+	db, err := sql.Open("postgres", psqlconn)
+	CheckError(err)
+
+	insertStmt := `insert into "samutable"("name", "num") values('Nizz', 1);`
+	_, e := db.Exec(insertStmt)
+	CheckError(e)
+
+	// close database
+	defer db.Close()
+
+	// check db
+	err = db.Ping()
+	CheckError(err)
+
+	fmt.Println("Connected!")
+}
+
+func connectToRedis() {
+	fmt.Println("Go Redis!")
+
+	client := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	pong, err := client.Ping(ctx).Result()
+	fmt.Println(pong, err)
+}
 
 func initTables() error {
 
@@ -114,44 +157,15 @@ func initTables() error {
 	return nil
 }
 
-func connectToPSQL() {
-	// connection string
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-
-	// open database
-	db, err := sql.Open("postgres", psqlconn)
-	CheckError(err)
-
-	// close database
-	defer db.Close()
-
-	// check db
-	err = db.Ping()
-	CheckError(err)
-
-	fmt.Println("Connected!")
-}
-
-func connectToRedis() {
-	fmt.Println("Go Redis!")
-
-	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
-
-	pong, err := client.Ping(ctx).Result()
-	fmt.Println(pong, err)
-}
-
 func main() {
-	//connectToPSQL()
-	connectToRedis()
+
+	connectToPSQL()
+	//connectToRedis()
+
 }
 
 func CheckError(err error) {
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 }
