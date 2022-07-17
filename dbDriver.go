@@ -29,17 +29,14 @@ const (
 	dbname   = "samudb"
 )
 
-func connectToPSQL() {
+
+func pingPSQL() {
 	// connection string
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	// open database
 	db, err := sql.Open("postgres", psqlconn)
 	CheckError(err)
-
-	insertStmt := `insert into "samutable"("name", "num") values('Nizz', 1);`
-	_, e := db.Exec(insertStmt)
-	CheckError(e)
 
 	// close database
 	defer db.Close()
@@ -51,21 +48,8 @@ func connectToPSQL() {
 	fmt.Println("Connected!")
 }
 
-func connectToRedis() {
-	fmt.Println("Go Redis!")
-
-	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
-
-	pong, err := client.Ping(ctx).Result()
-	fmt.Println(pong, err)
-}
-
-func initTables() error {
-
+//hardcoded postgres query mapping
+func psqlMapping(option1 int, customQuery string) error {
 	//Main Table
 	query1 := `CREATE TABLE mainTable(
 		userID INT PRIMARY KEY,
@@ -152,20 +136,62 @@ func initTables() error {
 
 	query7 := `ALTER TABLE propertyDetails add FOREIGN KEY(ownerID) REFERENCES mainTable(uniqueID);`
 
-	fmt.Println(query1, query2, query3, query4, query5, query6, query7, query8)
+	fmt.Println(query1, query2, query3, query4, query5, query6, query7, query8, customQuery)
+	// connection string
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+	// open database
+	db, err := sql.Open("postgres", psqlconn)
+	CheckError(err)
+
+	insertStmt := `insert into "samutable"("name", "num") values('Nizz', 1);`
+	_, err2 := db.Exec(insertStmt)
+
+	// close database
+	defer db.Close()
+
+	fmt.Println(option1)
+	return err2
+}
+
+func pingRedis() error {
+	fmt.Println("Go Redis!")
+
+	client := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	pong, err := client.Ping(ctx).Result()
+	fmt.Println(pong, err)
 
 	return nil
 }
 
-func main() {
+func redisMapping(customQuery string) error {
+	fmt.Println(customQuery)
+	return nil
+}
 
-	connectToPSQL()
-	//connectToRedis()
+func pingElasticsearch() error {
+	return nil
+}
 
+func elasticsearchMapping(customJSON string) error {
+	fmt.Println("Yoo", customJSON)
+	return nil
 }
 
 func CheckError(err error) {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func main() {
+
+	pingPSQL()
+	//pingRedis()
+
 }
