@@ -189,6 +189,7 @@ func psqlMapping(option1 int, customQuery string) error {
 
 	//Query multiplexing
 	switch option1 {
+	//INSERT, UPDATE
 	case 0:
 		_, err2 := db.Exec(customQuery)
 		fmt.Println("zero", err2)
@@ -214,10 +215,11 @@ func psqlMapping(option1 int, customQuery string) error {
 		outp := rowsToStrings(rows)
 		fmt.Println("Executing Query 7 ... ", outp, err2)
 
-	//delete from a specific table
+	//DROP ALL tables
 	case 3:
-		_, err2 := db.Exec(query2)
-		fmt.Println("Creating propertyTable ... ", err2)
+		_, err2 := db.Exec(`DROP TABLE IF EXISTS mainTable, propertydetails, 
+		paymenthistory, missiondetails, telemetryblackbox, websitelogsandstats CASCADE;`)
+		fmt.Println("Dropping ALL tables ... ", err2)
 
 	case 4:
 		fmt.Println("Yo")
