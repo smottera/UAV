@@ -82,7 +82,8 @@ setup sever-side streaming, client-side streaming and bidirectional streaming se
 //check if sbus output to microcontroller is okay
 //in case of signal loss: continue with current path? path plan a new Return to home then land
 
-
+// Aim for a packet rate of 100Hz
+semtec chips are used by most RC TxRx systems. But newer WiFi standards is king.
 */
 
 //This works:
