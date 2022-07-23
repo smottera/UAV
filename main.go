@@ -95,6 +95,24 @@ setup sever-side streaming, client-side streaming and bidirectional streaming se
 //deep classes > shallow classes
 //Unix file I/O is incredibly well designed
 
+/*
+Measure gRPC packet size:
+
+func GetGRPCResponseSize(val interface{}, desc string) (int, error) {
+
+    var buff bytes.Buffer
+    enc := gob.NewEncoder(&buff)
+    err := enc.Encode(val)
+    if err != nil {
+        log.Error("encode error:", err)
+        return 0, err
+    }
+    return binary.Size(buff.Bytes()), nil
+}
+
+
+*/
+
 package main
 
 import (
