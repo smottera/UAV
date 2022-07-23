@@ -97,7 +97,6 @@ setup sever-side streaming, client-side streaming and bidirectional streaming se
 
 /*
 Measure gRPC packet size:
-
 func GetGRPCResponseSize(val interface{}, desc string) (int, error) {
 
     var buff bytes.Buffer
@@ -110,7 +109,14 @@ func GetGRPCResponseSize(val interface{}, desc string) (int, error) {
     return binary.Size(buff.Bytes()), nil
 }
 
-
+// Size returns the size in bytes of the wire-format encoding of m.
+func Size(m Message) int {
+	if m == nil {
+		return 0
+	}
+	mi := MessageV2(m)
+	return protoV2.Size(mi)
+}
 */
 
 package main
