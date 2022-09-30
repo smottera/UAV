@@ -1,6 +1,13 @@
 import numpy as np
 import cv2
 import matplotlib
+import mediapipe
+
+#Funcs:
+#Break image into channels, build histogram, statistics
+#Perform thresholding
+#read docs of scikit-image
+
 
 def contourDetector():
 	# Reading image
