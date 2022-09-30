@@ -88,9 +88,9 @@ cv2.resize(img, (780, 540), interpolation = cv2.INTER_NEAREST)
 
 cv2.imshow("Cute Kitens", img)
 
-# Specify the size of image along with interploation methods.
-# cv2.INTER_AREA is used for shrinking, whereas cv2.INTER_CUBIC
-# is used for zooming.
+#Specify the size of image along with interploation methods.
+#cv2.INTER_AREA is used for shrinking, whereas cv2.INTER_CUBIC
+#is used for zooming.
 res = cv2.resize(img, (int(width / 2), int(height / 2)), interpolation = cv2.INTER_CUBIC)
 
 #cv2.imwrite('result.jpg', res)
@@ -98,19 +98,19 @@ res = cv2.resize(img, (int(width / 2), int(height / 2)), interpolation = cv2.INT
 cv2.imshow('Original Image', img)
 cv2.waitKey(0)
   
-# Gaussian Blur
+#Gaussian Blur
 Gaussian = cv2.GaussianBlur(img, (7, 7), 0)
 #cv2.imshow('Gaussian Blurring', Gaussian)
 
 #cv2.waitKey(0)
   
-# Median Blur
+#Median Blur
 median = cv2.medianBlur(img, 5)
 #cv2.imshow('Median Blurring', median)
 #cv2.waitKey(0)
   
   
-# Bilateral Blur
+#Bilateral Blur
 bilateral = cv2.bilateralFilter(img, 9, 75, 75)
 #cv2.imshow('Bilateral Blurring', bilateral)
 #cv2.waitKey(0) #millisec
