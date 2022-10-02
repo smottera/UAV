@@ -9,6 +9,9 @@ import mediapipe
 #read docs of scikit-image
 
 
+def autoLanding():
+	pass
+
 def contourDetector():
 	# Reading image
 	font = cv2.FONT_HERSHEY_COMPLEX
