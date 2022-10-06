@@ -1,3 +1,4 @@
+//Everything here needs a redo
 /*___________________________________________________________________________
                                 golang daemon
                                                 ___________
@@ -25,21 +26,19 @@ ___________________________________________________________________________
 
 -----TxRx.go
 Well defined milestones:
-Functional and optimized bidirectional comms.
+Dashboard/Frontend for dronemediaplatform. (and Backend!)
+WebGL, map APIs for orthomosaic manipulation feature.
+Functional and optimized bidirectional gRPC comms.
 Live video streaming.
 Mission and airtraffic management.
-Dashboard/Frontend for dronemediaplatform.
-S.Bus output for flight controllers.
+GPS-RTK usable centimeter-level accuracy.
+S.Bus on SoC output for flight controllers.
 Computer Controlled UAVs and USVs system (autopilot, waypoint, pathPlanning, etc).
 Fully functioning and necessary backend drivers for databases(redis and postgres).
-Figure out handling Authentication.
-gRPC gateway should allow internet wide comms.
-Chapters 8-12 in PDF
 
------Development procedure:
-test new proto file -> Test Latency and reliability -> test on SoC -> test under different network circumstances
 
 -----Misc ideas:
+test under different network circumstances
 watchdog function
 Design and build a scheduler?
 create stubClient, stubServer, stubRepeater subPackages?
@@ -82,43 +81,14 @@ setup sever-side streaming, client-side streaming and bidirectional streaming se
 //check if sbus output to microcontroller is okay
 //in case of signal loss: continue with current path? path plan a new Return to home then land
 
-// Aim for a packet rate of 100Hz
-semtec chips are used by most RC TxRx systems. But newer WiFi standards is king.
+
 */
 
-//This works:
+//protoc --go_out=. *.proto
+
+//this works
 //protoc -I ./ protofiles/person.proto --go_out=plugins=grpc:.
-//not needed:
 //protoc -I ./ protofiles/person.proto --go-grpc_out=plugins=grpc:.
-
-//reduce program complexity and abstraction
-//catch error exceptions correctly
-//deep classes > shallow classes
-//Unix file I/O is incredibly well designed
-
-/*
-Measure gRPC packet size:
-func GetGRPCResponseSize(val interface{}, desc string) (int, error) {
-
-    var buff bytes.Buffer
-    enc := gob.NewEncoder(&buff)
-    err := enc.Encode(val)
-    if err != nil {
-        log.Error("encode error:", err)
-        return 0, err
-    }
-    return binary.Size(buff.Bytes()), nil
-}
-
-// Size returns the size in bytes of the wire-format encoding of m.
-func Size(m Message) int {
-	if m == nil {
-		return 0
-	}
-	mi := MessageV2(m)
-	return protoV2.Size(mi)
-}
-*/
 
 package main
 
@@ -320,7 +290,7 @@ func initSys() {
 func main() {
 
 	initSys()
-	//testProtoMarshalling()
+	testProtoMarshalling()
 
 	testTelemetry()
 
