@@ -1,4 +1,4 @@
-// This is the client stub (UAV/Robot backend)
+///This is the client stub (UAV/Robot backend)
 package main
 
 import (
@@ -17,7 +17,7 @@ import (
 const (
 	address = "localhost:50051"
 
-	controlport = ":50052"
+	controlPort = ":50052"
 	noOfSteps   = 50
 )
 
@@ -77,46 +77,49 @@ func ReceiveStream(client pb.UavControlClient, request *pb.Acknowledged) {
 			log.Fatalf("%v.GetTelemetry(_) = _, %v", client, err)
 		}
 
-		fmt.Println("Battery Voltage: %f", "Current Draw: %f", "Longitude: %f", "Latitude: %f",
-			"Altitude: %f", "Temperature: %f", "MotorRPM: %f", "Gyro: %f", "Accel: %f",
+		fmt.Println("Battery Voltage: %f", "Current Draw: %f", "Longitude: %f", "Latitude: %f", "Altitude: %f", "Temperature: %f", "MotorRPM: %f", "Gyro: %f", "Accel: %f",
 			response.BatteryVoltage, response.CurrentDraw, response.Longitude, response.Latitude,
 			response.Altitude, response.Temperature, response.MotorRPM, response.Gyro, response.Accel)
 	}
 }
 
-func testControlLink() error {
-	// Set up a connection to the server.
+func telemetryClient() {
+
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
+
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}
 
 	defer conn.Close()
+
 	client := pb.NewUavControlClient(conn)
 
-	ReceiveStream(client, &pb.Acknowledged{A: "guccii"})
+	ReceiveStream(client, &pb.Acknowledged{A: "Kiti is a randi. Client sent this."})
+}
 
-	//start server
-	lis, err := net.Listen("tcp", controlport)
+func controlServer() {
+
+	lis, err := net.Listen("tcp", controlPort)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
+	// Create a new GRPC Server
 	s := grpc.NewServer()
 
-	pb.RegisterUavControlServer(s, &pb.UnimplementedUavControlServer{})
+	// Register it with Proto service
+	pb.RegisterUavControlServer(s, &server{})
 
+	// Register reflection service on gRPC server.
 	reflection.Register(s)
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
-
-	return nil
 }
 
 func main() {
-
-	testControlLink()
-
+	telemetryClient()
+	//controlServer()
 }
