@@ -94,6 +94,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"net"
@@ -106,8 +107,9 @@ import (
 )
 
 const (
-	port      = ":50051"
-	noOfSteps = 50
+	telemetryPort = ":50051"
+	controlPort   = ":50052"
+	noOfSteps     = 50
 )
 
 var (
@@ -152,7 +154,6 @@ var (
 	repeat     bool
 )
 
-// server is used to create uavControlServer.
 type server struct {
 	pb.UnimplementedUavControlServer
 }
@@ -162,11 +163,8 @@ func (s *server) GetTelemetry(in *pb.Acknowledged, stream pb.UavControl_GetTelem
 	log.Printf("a: $%s", in.A)
 	// Send streams here
 	for i := 0; i < noOfSteps; i++ {
-		// Simulating I/O or Computation process using sleep........
-		// Usually this will be saving money transfer details in DB or
-		// talk to the third party API
+
 		time.Sleep(time.Microsecond * 1)
-		// Once task is done, send the successful message back to the client
 		if err := stream.Send(&pb.TelemetryPacket{
 			BatteryVoltage: batteryVoltage,
 			CurrentDraw:    currentDraw,
@@ -185,6 +183,25 @@ func (s *server) GetTelemetry(in *pb.Acknowledged, stream pb.UavControl_GetTelem
 
 	log.Printf("Successfully transfered amount $%v ", in.A)
 	return nil
+}
+
+//receive client stream
+func ReceiveStream(stream pb.UavControl_SendDroneControlServer) error {
+
+	log.Println("Started listening to the stream!")
+
+	values, err := stream.Recv()
+	//stream, err := client.GetTelemetry(context.Background(), request)
+
+	if err == io.EOF {
+		// Close the connection and return the response to the client
+		return err
+	}
+
+	// Listen to the stream of messages
+	for {
+		fmt.Println(values.Throttle, values.Aileron, values.Rudder, values.Elevator)
+	}
 }
 
 func testProtoMarshalling() {
@@ -218,8 +235,8 @@ func testProtoMarshalling() {
 	fmt.Println("Time taken: ", diff)
 }
 
-func testTelemetry() {
-	lis, err := net.Listen("tcp", port)
+func startTelemetry() {
+	lis, err := net.Listen("tcp", telemetryPort)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
@@ -238,13 +255,28 @@ func testTelemetry() {
 	}
 }
 
+func controlClient() {
+
+	conn, err := grpc.Dial("localhost"+controlPort, grpc.WithInsecure())
+
+	if err != nil {
+		log.Fatalf("Did not connect: %v", err)
+	}
+
+	defer conn.Close()
+
+	client := pb.NewUavControlClient(conn)
+
+	ReceiveStream(client, &pb.Acknowledged{A: "Kiti is a randi. Client sent this."})
+}
+
 func droneDummyDataGenerator() {
 
 	//init these variables
 
 	rand1 := float32(rand.Float64())
 	rand2 := int(rand.Int())
-	timestamp := time.Now()
+	//timestamp := time.Now()
 
 	//priority 0
 	batteryLow = true
@@ -277,7 +309,7 @@ func droneDummyDataGenerator() {
 	gyro = 1507 * rand1
 	accel = 1508 * rand1
 
-	fmt.Println("Battery Voltage", batteryVoltage, currentDraw, homeLat, homeLon, timestamp)
+	//fmt.Println("Battery Voltage", batteryVoltage, currentDraw, homeLat, homeLon, timestamp)
 
 }
 
@@ -289,9 +321,10 @@ func initSys() {
 
 func main() {
 
-	initSys()
-	testProtoMarshalling()
+	//initSys()
+	//testProtoMarshalling()
 
-	testTelemetry()
+	startTelemetry()
+	//testControl()
 
 }
