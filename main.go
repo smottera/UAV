@@ -1,5 +1,5 @@
 //Everything here needs a redo
-/*___________________________________________________________________________
+/*__________________________________________________________________________
                                 golang daemon
                                                 ___________
                                 GUI <---------> | TxRx.go |
@@ -22,7 +22,7 @@
                                                 |_________| 5-------> image/video transmission
 								      									(frames are captured, compressed and minced before dispatch to cloud)
                                                                       	(images/frames need to be memcached in Redis
-___________________________________________________________________________
+__________________________________________________________________________
 
 -----TxRx.go
 Well defined milestones:
