@@ -9,7 +9,7 @@ with open(img_path, 'rb') as img_file:
     
 print(img.has_exif)
 
-count = 0
+count = 0.0
 for item in sorted(img.list_all()):
     print(item)
     count += 1
