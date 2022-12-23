@@ -16,7 +16,7 @@ for item in sorted(img.list_all()):
 
 print("Total number of keys: ", count)
 
-#pip install python-xmp-toolkit
+#pip install python-xmp-toolkit ...
 
 f = r'C:/Users/QuNuKhan/Desktop/Mini3Pro/DJI_0155.JPG'
 fd = open(f, encoding = 'latin-1')
