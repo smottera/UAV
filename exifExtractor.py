@@ -1,3 +1,4 @@
+###
 from exif import Image
 
 img_path2 = f'C:/Users/Juggernaut/Desktop/PANcard.jpg'
