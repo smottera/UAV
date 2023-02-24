@@ -8,7 +8,7 @@ import mediapipe
 #Perform thresholding
 #read docs of scikit-image
 
-
+#In Demo GUI, show RGB Fourier Transform
 
 #UPLOAD PIPELINE:
 #Extract image directory metadata -> plot points on google maps API rendering -> Estimate upload time -> begin upload files and storing as blobs on our server
