@@ -1,4 +1,3 @@
-//Everything here needs a redo
 /*__________________________________________________________________________
                                 golang daemon
                                                 ___________
@@ -13,37 +12,36 @@
             Custom Physical Joystick ---------> | TxRx.go |                            (Use with RC sim)
                                                 |         |                            (Must be integrated with a C++ windows driver)
 	  Fully Automatic Piloting System ------->  |	      |
-	                                        	|         | 3-------> sbus output
+	                                        |         | 3-------> sbus output
                                                 | TxRx.go |           (directly talk to FC) (Must be integrated with Golang uart packages
-	                                        	|         |
-	                                        	|         | 4-------> Traffic Management memebership
-		                                        | TxRx.go |          (depends on a PostgreSQL DB)
+	                                        |         |
+	                                        |         | 4-------> Traffic Management memebership
+		                                | TxRx.go |          (depends on a PostgreSQL DB)
                                                 |         |
                                                 |_________| 5-------> image/video transmission
 								      									(frames are captured, compressed and minced before dispatch to cloud)
                                                                       	(images/frames need to be memcached in Redis
 __________________________________________________________________________
 
------TxRx.go
-Well defined milestones:
-Dashboard/Frontend for dronemediaplatform. (and Backend!)
-WebGL, map APIs for orthomosaic manipulation feature.
+-----TxRx.go mini feature list
+
+Dashboard/Frontend GUI
+WebGL, OpenCV, Google map APIs for orthomosaic manipulation feature.
 Functional and optimized bidirectional gRPC comms.
 Live video streaming.
 Mission and airtraffic management.
 GPS-RTK usable centimeter-level accuracy.
-S.Bus on SoC output for flight controllers.
+S.Bus
 Computer Controlled UAVs and USVs system (autopilot, waypoint, pathPlanning, etc).
 Fully functioning and necessary backend drivers for databases(redis and postgres).
 
 
------Misc ideas:
+-----Misc:
 test under different network circumstances
 watchdog function
 Design and build a scheduler?
-create stubClient, stubServer, stubRepeater subPackages?
-setup sever-side streaming, client-side streaming and bidirectional streaming services/interfaces and test
-//compare performance. Introduce more real world tests
+
+
 //setup gateway, test across the internet
 // test with multiple server / client instances
 // test what happens to stream during connection loss
