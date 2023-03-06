@@ -1,4 +1,3 @@
-///This is the client stub (UAV/Robot backend)
 package main
 
 import (
