@@ -87,6 +87,8 @@ Design and build a scheduler?
 //this works
 //protoc -I ./ protofiles/person.proto --go_out=plugins=grpc:.
 //protoc -I ./ protofiles/person.proto --go-grpc_out=plugins=grpc:.
+//health checks, load balancing and goroutines, monitor the network, implement client side retries
+// circuit breakers, authorization and authentication.
 
 package main
 
